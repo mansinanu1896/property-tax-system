@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.property.tax.constant.Status;
 import com.property.tax.entity.PropertyType;
@@ -20,10 +21,10 @@ import com.property.tax.service.PropertyTypeService;
 
 @Controller
 public class SelfAssessmentFormController {
-	
+
 	@Autowired
 	SessionFactory sf;
-	
+
 	@Autowired
 	private PropertyTypeService propertyTypeService;
 
@@ -33,26 +34,34 @@ public class SelfAssessmentFormController {
 		return "index";
 
 	}
-	
-	@RequestMapping(value="/api/v1/redirect/{pageName}",method=RequestMethod.GET)
 
-	public String redirect(@PathVariable String pageName,Model model) {
-		if(pageName.equals("selfAssessment")) {
-			List<PropertyType> getallPropertyTypes=propertyTypeService.getAllProperty();
-	
-			model.addAttribute("properties",getallPropertyTypes);
+	@RequestMapping(value = "/api/v1/redirect/{pageName}", method = RequestMethod.GET)
+
+	public String redirect(@PathVariable String pageName, Model model) {
+		if (pageName.equals("selfAssessment")) {
+			List<PropertyType> getallPropertyTypes = propertyTypeService.getAllProperty();
+
+			model.addAttribute("properties", getallPropertyTypes);
 		}
-		
+
 		return pageName;
 	}
-	
+
+	@RequestMapping(value = "/api/v1/properties", method = RequestMethod.GET)
+	@ResponseBody
+	public List<PropertyType> getPropertiesINJSON() {
+		List<PropertyType> getallPropertyTypes = propertyTypeService.getAllProperty();
+
+		return getallPropertyTypes;
+	}
+
 //	@RequestMapping(value="/getAllPropertyType",method=RequestMethod.GET)
 //	public List<PropertyType> getAllPropertyType(){
 //		
 //		List<PropertyType> getallPropertyTypes=propertyTypeService.getAllProperty();
 //		return getallPropertyTypes;
 //	}
-	
+
 //	@RequestMapping(value="/postData",method=RequestMethod.GET)
 //	public String data() {
 //		
@@ -77,7 +86,7 @@ public class SelfAssessmentFormController {
 //		Zone z3=new Zone(null,"Zone C",l3);
 //		zonelist1.add(z1);zonelist1.add(z2);zonelist1.add(z3);
 //		
-//		PropertyType p=new PropertyType(null,"Tiled/Sheet of all kinds ",zonelist1);
+//		PropertyType p=new PropertyType(null,"Tiled/Sheet of all kinds",zonelist1);
 //		Session session=sf.getCurrentSession();
 //		session.beginTransaction();
 //		session.save(t1);session.save(t2);session.save(t3);session.save(t4);session.save(t5);session.save(t6);
